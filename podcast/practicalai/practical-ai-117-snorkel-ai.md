@@ -4,7 +4,7 @@
 
 featuring **Braden Hancock**
 
-
+---
 
 > **Chris Benson:** Was there a particular itch that you were scratching in that context, that actually led to Snorkel AI?
 
@@ -16,7 +16,7 @@ Deep learning was blossoming right about then, we saw these super-powerful model
 
 In Academia, it's "Download the dataset and then do something cool with it." But in industry, it's to prepare the data. Steps 1 through 9 is "Where am I gonna get my data? Do I have enough of it? Is it clean enough? These annotators are doing the exact wrong thing. I can clarify the instructions... Is this good now?" **It's iterating, and 80% of the work is making that training set.** After that, pulling off some state-of-the-art model in the open source and running is the easy part.
 
-
+---
 
 > **Chris Benson:** Tell us a bit about Snorkel AI, how the whole thing got started?
 
@@ -28,7 +28,7 @@ We helped a few different organizations make industry-scale versions of this int
 
 **We just learned so much through that time about what you would really need to take this proof of concept and make it something that could be repeatable and with a relatively low barrier to entry,**  that doesn't require a room full of Stanford PhDs to make it successful. And that's part of what motivated the company, is the chance to now make this a fully supported, enterprise-ready and able to be shared with a whole bunch of different industries and company sizes, and in different work areas.
 
-
+---
 
 > **Chris Benson:** Before you dive into the specifics of the product and service offerings, could you talk a little bit about what you did learn?
 
@@ -38,11 +38,11 @@ We helped a few different organizations make industry-scale versions of this int
 
 If I was grouping it into other areas, **I'd say there's also infrastructure.** As a company, if you're going to depend on a piece of software, you need it to have certain things. Basic security, and logging, encryption, and compatibility with the data formats that you care about, and dependency management, parallelization, all these things.
 
-I'd say another big piece of this is, as an academic you test often these ablations, you'll test a very specific problem, and "Can the model learn what I need it to?" **But in the wild, you often have actually just a problem you need to solve, and you don't necessarily care how that's solved; you just want a high-quality system.** And so you don't just have this one model that's ready to go with the data that you care about, that has an output that is exactly what you care about. **It's a pipeline. You've got preprocessing steps, you've got business logic, you're chaining together multiple models, or multiple operators. Some heuristic and some are machine learning-based.**
+I'd say another big piece of this is, as an academic you test often these ablations, you'll test a very specific problem, and "Can the model learn what I need it to?" **But in the wild, you often have actually just a problem you need to solve, and you don't necessarily care how that's solved; you just want a high-quality system.** And so you don't just have this one model that's ready to go with the data that you care about, that has an output that is exactly what you care about. It's a pipeline. You've got preprocessing steps, you've got business logic, you're chaining together multiple models, or multiple operators. Some heuristic and some are machine learning-based.
 
-So this actually gets at one of the big differences, I'd say, in terms of fundamental value out of the Snorkel open source, versus Snorkel Flow, the business product. The latter is much more focused on building AI applications. **An application that solves your problem from end-to-end, rather than just a point solution for a part of the pipeline that is making a training set or training a single model.**
+So this actually gets at one of the big differences, I'd say, in terms of fundamental value out of the Snorkel open source, versus Snorkel Flow, the business product. The latter is much more focused on building AI applications. An application that solves your problem from end-to-end, rather than just a point solution for a part of the pipeline that is making a training set or training a single model.
 
-
+---
 
 > **Chris Benson:** Could you now define what each of those are and describe what the differences between Snorkel open source and Snorkel Flow?
 
@@ -56,7 +56,7 @@ So that platform, Snorkel Flow, is meant to be this much broader solution for su
 
 There are a number of ways where it can be a truly no-code or very low code environment for subject matter experts who don't necessarily know how to whip out the Python and solve a problem, but do have a lot of knowledge that's relevant to solving a problem.
 
-
+---
 
 > **Chris Benson:** If you could kind of give us a sense of what the open source side experience is like, what the benefit of the libraries are, that'd be fantastic.
 
@@ -74,7 +74,7 @@ But basically, **these noisier sources of supervision can be then much more scal
 
 **It essentially is a way of building and managing training sets very quickly, often at a much higher rate of production, as well as just much larger magnitude.**
 
-
+---
 
 > **Chris Benson:** What is a typical scenario that you're finding with customers, where they do need to level up? What is it that they are now facing, that is a clear step-up and they need the enterprise approach at this point?
 
@@ -94,7 +94,7 @@ In some cases it's "Yes, actually your training set looks pretty good. The learn
 
 There are basically just blind spots that your model has, and now in the platform you can go ahead and click on that error bucket, go look at those 20, or 100, or however many examples where none of your labeling functions are applying, so this is not reflected at all in your training set, and **write some new supervision that will add effectively examples of that type to your training set**, so that the next model you train will know something about those types of examples, and can improve upon them.
 
-
+---
 
 > **Chris Benson:** What is that special sauce, to some degree, that you guys were really looking to introduce into the marketplace with this platform?
 
@@ -104,7 +104,7 @@ I think what really moves the needle is the fact that with this approach and wit
 
 So for any of these problems, there are different types of labeling functions that you write for a classification problem versus an extraction problem, or whatnot... But fundamentally, once you scrape off that top layer, it looks very similar. So this platform really is meant to solve a wide variety of problem types, and work in a whole bunch of different industries and verticals and whatnot... **Because again, under the hood, they're all relying on the same, basic, fundamental principles about how machine learning works.** And it was with that in mind that we built the platform.
 
-
+---
 
 > **Chris Benson:** Could you describe a little bit about how you might integrate in with other tools that are widely used within this industry? What kind of integrations do you have, and how that really helps the practitioner get through the process of modeling that they're trying to do?
 
@@ -114,7 +114,7 @@ One of the things that we learned from the open source project was **the importa
 
 So that means that you can write labeling functions via these nice GUI builders that we've got, or you can define completely arbitrary black box labeling functions via code in the notebook, push those up, and then they're treated the same way in the platform. Same thing with the training sets; you can create a training set and then go to the models page and identify the model that you want, set up your hyperparameters and train it there with a button, or you can use the SDK to export your training set, training your own model, and then just re-register the predictions, push them back up, just some very lightweight, assign certain labels, and then use the analysis page to still guide you.
 
-
+---
 
 > **Chris Benson:** When you guys are getting together and hanging out and talking about what-ifs, what are some of those what-ifs that you're willing to share?
 
@@ -130,7 +130,7 @@ They each observe different slices of your data that have different common prope
 
 That maybe appeals more to the technical/nerdy side of things, but I think it's a really interesting problem, one where you've got that information. You have already identified for you these very interesting angles on your problem, and so why not use those to help **guide the post-deployment life of a model**.
 
-
+---
 
 > **Chris Benson:** What are some of the really interesting things that you've seen customers doing with this?Particularly things that were outside of what you might have expected. 
 
@@ -144,7 +144,7 @@ I think another interesting application we've seen was we had one customer who h
 
 And since it was very early on and we hadn't necessarily had a lot of time to train using the platform, we said "Sure, we've got some ideas. Give us a sec." We threw three of us in a war room for the day, ordered some burritos and hacked away, and by the end of the day we were able to extract the terms that they needed with over 99% accuracy on their application. That was achievable with a model that was trained on tens of thousands of examples, which we didn't need to label. We were able to quickly come up with **"What are the generalizable rules or principles here that we could use to create a training set to train a model that now can handle edge case and things much better than these rules?"** and get then get the high quality that they needed. So that sort of live action, the nerds save the day kind of moment...
 
-
+---
 
 > **Chris Benson:** Do you have any insight or any thoughts into where we're going in terms of us moving along this curve from these static-label datasets that we were talking about, historically, at the beginning of the conversation, to this dynamic, especially since Covid has struck, the ever-changing world on a day-to-day basis - what's that trajectory look like, and how are you guys preparing for that?
 
@@ -156,7 +156,7 @@ So they realize that that's important in a way that they maybe didn't before. I 
 
 It's super-interesting, and it changes the way that you account for the cost of different applications you might use, because there's a certain way that you maintain imperative (we'll call it) Software 1.0, and there's a different way that you maintain this machine learning-based Software 2.0 way of solving a problem. It's something people are learning, and I think that's all an interesting part of the conversations that we're having with different customers as **they realize how this can maybe change the way that they approach their machine learning stack in general**.
 
-
+---
 
 > **Chris Benson:** Okay. As we wind up here, I'm finally getting to ask what is always my favorite question anytime we're getting to talk to someone such as yourself... Blank sheet of paper, what are you excited about right now in the space of machine learning and AI? What is the thing that has captured your imagination, whether it's work-related or whether it's not work-related? Something cool out there... What's got you going "That's the thing I'm really interested in tracking, either on my own, or through the company, or whatever?" What's cool?
 
