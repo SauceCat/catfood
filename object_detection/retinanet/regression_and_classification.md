@@ -1,8 +1,8 @@
 # Regression and Classification
 
-### initialize
+## initialize
 
-#### common part
+### common part
 
 ```python
 # num_features_in = 256
@@ -33,13 +33,13 @@ self.conv4 = nn.Conv2d(
 self.act4 = nn.ReLU()
 ```
 
-#### RegressionModel
+### RegressionModel
 
 ```python
 self.output = nn.Conv2d(feature_size, num_anchors * 4, kernel_size=3, padding=1)
 ```
 
-#### ClassificationModel
+### ClassificationModel
 
 ```python
 self.output = nn.Conv2d(
@@ -51,9 +51,9 @@ self.output_act = nn.Sigmoid()
 
 ---
 
-### forward
+## forward
 
-#### common part
+### common part
 
 ```python
 # x: [2, 256, 80, 104]
@@ -74,7 +74,7 @@ out = self.act4(out)
 # out: [2, 256, 80, 104]
 ```
 
-#### RegressionModel
+### RegressionModel
 
 ```python
 # out: [2, 256, 80, 104]
@@ -88,7 +88,7 @@ return out.contiguous().view(out.shape[0], -1, 4)
 # return: [2, 74880, 4], 74880 = 80 * 104 * num_anchors
 ```
 
-#### ClassificationModel
+### ClassificationModel
 
 ```python
 # out: [2, 256, 80, 104]

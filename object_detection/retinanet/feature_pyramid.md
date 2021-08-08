@@ -1,6 +1,6 @@
 # Feature Pyramid Networks
 
-### From ResNets
+## From ResNets
 
 ```python
 # fpn_sizes: [layer2, layer3, layer4]
@@ -11,7 +11,7 @@ self.fpn = PyramidFeatures(fpn_sizes[0], fpn_sizes[1], fpn_sizes[2])
 
 ---
 
-### PyramidFeatures
+## PyramidFeatures
 
 RetinaNet uses feature pyramid levels P3 to P7:
 
@@ -26,7 +26,7 @@ This differs slightly from FPN:
 
 These minor modifications improve speed while maintaining accuracy.
 
-#### initialize
+### initialize
 
 ```python
 C3_size = 512 
@@ -75,7 +75,7 @@ self.P7_2 = nn.Conv2d(
 )
 ```
 
-#### forward
+### forward
 
 ```python
 # B, C, H, W
@@ -141,7 +141,7 @@ P7_x = self.P7_2(P7_x)
 # P7_x: [2, 256, 5, 7]
 ```
 
-#### return
+### return
 
 ```python
 return [P3_x, P4_x, P5_x, P6_x, P7_x]

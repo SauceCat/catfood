@@ -9,7 +9,7 @@
 
 ![1628040884098](/home/saucecat/.config/Typora/typora-user-images/1628040884098.png)
 
-#### BasicBlock (Left): ResNet-18/34
+### BasicBlock (Left): ResNet-18/34
 
 ```python
 class BasicBlock(nn.Module):
@@ -46,7 +46,7 @@ class BasicBlock(nn.Module):
         return out
 ```
 
-#### Bottleneck (Right): ResNet-50/101/152
+### Bottleneck (Right): ResNet-50/101/152
 
 ```python
 class Bottleneck(nn.Module):

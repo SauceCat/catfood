@@ -1,6 +1,6 @@
 # Anchors
 
-### initialize
+## initialize
 
 ```python
 # [layer2, layer3, layer4, ...]
@@ -22,7 +22,7 @@ self.scales = np.array([2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)])
 
 ---
 
-### forward
+## forward
 
 ```python
 # image: [2, 3, 640, 832]
@@ -62,7 +62,7 @@ return torch.from_numpy(all_anchors.astype(np.float32)).cuda()
 
 ---
 
-### `generate_anchors`
+## `generate_anchors`
 
 ```python
 anchors = generate_anchors(
@@ -73,7 +73,7 @@ anchors = generate_anchors(
 # scales = [2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)]
 ```
 
-#### initialize
+### initialize
 
 ```python
 # num_anchors = 9 
@@ -98,7 +98,7 @@ array([[0., 0., 0., 0.],
        [0., 0., 0., 0.]])
 ```
 
-#### scale base_size
+### scale base_size
 
 ```python
 # scale base_size
@@ -128,7 +128,7 @@ array([[ 0.        ,  0.        , 32.        , 32.        ],
        [ 0.        ,  0.        , 50.79683366, 50.79683366]])
 ```
 
-#### correct for ratios
+### correct for ratios
 
 ```python
 # compute areas of anchors
@@ -171,7 +171,7 @@ array([[ 0.        ,  0.        , 45.254834  , 22.627417  ],
        [ 0.        ,  0.        , 35.91878555, 71.83757109]])
 ```
 
-#### transform from (x_ctr, y_ctr, w, h) -> (x1, y1, x2, y2)
+### transform from (x_ctr, y_ctr, w, h) -> (x1, y1, x2, y2)
 
 ```python
 anchors[:, 0::2] -= np.tile(anchors[:, 2] * 0.5, (2, 1)).T
@@ -208,7 +208,7 @@ array([[-22.627417  , -11.3137085 ,  22.627417  ,  11.3137085 ],
 
 ---
 
-### `shift`
+## `shift`
 
 ```python
 shifted_anchors = shift(image_shapes[idx], self.strides[idx], anchors)
@@ -217,7 +217,7 @@ shifted_anchors = shift(image_shapes[idx], self.strides[idx], anchors)
 # anchors (9, 4)
 ```
 
-#### prepare shifts
+### prepare shifts
 
 ```python
 shift_x = (np.arange(0, shape[1]) + 0.5) * stride
@@ -309,7 +309,7 @@ array([[  4.,   4.,   4.,   4.],
        [828., 636., 828., 636.]])
 ```
 
-#### shift anchors
+### shift anchors
 
 ```python
 # add A anchors (1, A, 4) to

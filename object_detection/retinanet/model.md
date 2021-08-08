@@ -1,8 +1,8 @@
 # Model
 
-### initialize
+## initialize
 
-#### backbone
+### backbone
 
 ```python
 self.inplanes = 64
@@ -16,7 +16,7 @@ self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
 self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
 ```
 
-#### fpn
+### fpn
 
 ```python
 if block == BasicBlock:
@@ -38,7 +38,7 @@ else:
 self.fpn = PyramidFeatures(fpn_sizes[0], fpn_sizes[1], fpn_sizes[2])
 ```
 
-#### others
+### others
 
 ```python
 # classification and regression use separate parameters
@@ -51,7 +51,7 @@ self.clipBoxes = ClipBoxes()
 self.focalLoss = losses.FocalLoss()
 ```
 
-#### weights initialization
+### weights initialization
 
 ```python
 # initialization
@@ -87,9 +87,9 @@ self.freeze_bn()
 
 ---
 
-### forward
+## forward
 
-#### backbone
+### backbone
 
 ```python
 # img_batch: [2, 3, 640, 832]
@@ -116,7 +116,7 @@ x4 = self.layer4(x3)
 # x4: [2, 2048, 20, 26]
 ```
 
-#### fpn
+### fpn
 
 **Detail:** [feature_pyramid.md](feature_pyramid.md)
 
@@ -133,7 +133,7 @@ features = self.fpn([x2, x3, x4])
 # P7_x: [2, 256, 5, 7]
 ```
 
-#### regressionModel, classificationModel 
+### regressionModel, classificationModel 
 
 **Detail:** [regression_and_classification.md](regression_and_classification.md)
 
@@ -161,7 +161,7 @@ classification = torch.cat(classification_features, dim=1)
 # P7_x: [2, 256, 5, 7] -> [2, 315, 20], 5 * 7 * 9 = 315
 ```
 
-#### anchors
+### anchors
 
 **Detail:** [anchors.md](anchors.md)
 
@@ -169,7 +169,7 @@ classification = torch.cat(classification_features, dim=1)
 anchors = self.anchors(img_batch)
 ```
 
-#### focalLoss
+### focalLoss
 
 **Detail:** [focal_loss.md](focal_loss.md)
 

@@ -1,6 +1,6 @@
 # regressBoxes
 
-### initialize
+## initialize
 
 ```python
 self.regressBoxes = BBoxTransform()
@@ -20,13 +20,13 @@ self.std = torch.from_numpy(
 
 ---
 
-### forward
+## forward
 
 ```python
 transformed_anchors = self.regressBoxes(anchors, regression)
 ```
 
-#### transform anchors
+### transform anchors
 
 from `(x1, y1, x2, y2)` -> `(x_ctr, y_ctr, w, h)`
 
@@ -47,7 +47,7 @@ anchor_ctr_x = anchor[:, 0] + 0.5 * anchor_widths
 anchor_ctr_y = anchor[:, 1] + 0.5 * anchor_heights
 ```
 
-#### compute diffs
+### compute diffs
 
 ```python
 # deltas = regression

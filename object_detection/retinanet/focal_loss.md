@@ -1,6 +1,6 @@
 # FocalLoss
 
-### prepare
+## prepare
 
 ```python
 img_batch, annotations = inputs
@@ -28,7 +28,7 @@ self.focalLoss(classification, regression, anchors, annotations)
 
 ---
 
-### initialize
+## initialize
 
 ```python
 alpha = 0.25
@@ -47,7 +47,7 @@ anchor_ctr_y = anchor[:, 1] + 0.5 * anchor_heights
 
 ---
 
-### obtain ground truths
+## obtain ground truths
 
 ```python
 j = 0
@@ -66,7 +66,7 @@ classification = torch.clamp(classification, 1e-4, 1.0 - 1e-4)
 
 ---
 
-### If there is no positive annotations
+## If there is no positive annotations
 
 ```python
 # classification.shape: (99765, 20)
@@ -85,9 +85,9 @@ cls_loss = focal_weight * bce
 
 ---
 
-### when there are positive annotations
+## when there are positive annotations
 
-#### calculate IoU
+### calculate IoU
 
 ```python
 IoU = calc_iou(
@@ -106,7 +106,7 @@ IoU_max, IoU_argmax = torch.max(IoU, dim=1)
 [0.0000, 0.0000, 0.0000,  ..., 0.0048, 0.0363, 0.0677]
 ```
 
-#### assign ground truths to anchors
+### assign ground truths to anchors
 
 Specifically, anchors are assigned to ground-truth object boxes using an intersection-over-union (IoU) threshold of 0.5; and to background if their IoU is in [0, 0.4). 
 
@@ -133,7 +133,7 @@ targets[
 ] = 1
 ```
 
-#### compute focal loss for classification
+### compute focal loss for classification
 
 ```python
 alpha_factor = torch.ones(targets.shape).cuda() * alpha
@@ -166,7 +166,7 @@ classification_losses.append(
 )
 ```
 
-#### transform anchors and ground truth boxes (num_positive_anchors > 0)
+### transform anchors and ground truth boxes (num_positive_anchors > 0)
 
 ```python
 assigned_annotations = assigned_annotations[positive_indices, :]
@@ -185,7 +185,7 @@ gt_widths = torch.clamp(gt_widths, min=1)
 gt_heights = torch.clamp(gt_heights, min=1)
 ```
 
-#### generate regression targets
+### generate regression targets
 
 For COCO dataset, the regression mean is `[0, 0, 0, 0]`, std is `[0.1, 0.1, 0.2, 0.2]`.
 
@@ -202,7 +202,7 @@ targets = targets.t()
 targets = targets / torch.Tensor([[0.1, 0.1, 0.2, 0.2]]).cuda()
 ```
 
-#### compute regression loss (smooth L1 loss)
+### compute regression loss (smooth L1 loss)
 
 https://github.com/yhenon/pytorch-retinanet/issues/127
 
