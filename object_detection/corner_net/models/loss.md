@@ -1,10 +1,15 @@
 # Loss
 
+Following (Newell et al., 2016), we also add intermediate supervision in training. However, we do not add back the intermediate predictions to the network as we find that this hurts the performance of the network. 
+
 ## Initialization
 
 ```python
 # CornerNet, CornerNet Squeeze
 self.loss = CornerNet_Loss(pull_weight=1e-1, push_weight=1e-1)
+
+# CenterNet
+self.loss = AELoss(pull_weight=1e-1, push_weight=1e-1, focal_loss=_neg_loss)
 
 # CornerNet Saccade
 self.loss = CornerNet_Saccade_Loss(pull_weight=1e-1, push_weight=1e-1)
@@ -45,6 +50,23 @@ class Loss(nn.Module):
 # ]
 ```
 
+### CenterNet
+
+```python
+# outs: [
+#	tl_heats, br_heats, ct_heats,
+#	tl_tags, br_tags, 
+#	tl_offs, br_offs, ct_offs,
+# ]
+
+# targets: [
+#	tl_heatmaps, br_heatmaps, ct_heatmaps,
+#	tag_masks, 
+#	tl_regrs, br_regrs, ct_regrs,
+#	tl_tags, br_tags
+# ]
+```
+
 ### CornerNet Saccade
 
 ```python
@@ -68,9 +90,9 @@ class Loss(nn.Module):
 
 **Reducing Penalty to Negative Locations*
 
-![img](https://miro.medium.com/max/500/1*t7QXVGHsrMOWTPeE87sf8w.png)
+![img](../images/gaussian_bump.png)
 
-![img](https://miro.medium.com/max/517/1*MJeNNCGDXhm8AMmdRS5zRA.png)
+![img](../images/gaussian_bump_2.png)
 
 ### _focal_loss, _focal_loss_mask
 
@@ -127,6 +149,22 @@ br_heats = [_sigmoid(b) for b in br_heats]
 
 focal_loss += self.focal_loss(tl_heats, gt_tl_heat)
 focal_loss += self.focal_loss(br_heats, gt_br_heat)
+```
+
+### CenterNet
+
+```python
+focal_loss = 0
+
+tl_heats = [_sigmoid(t) for t in tl_heats]
+focal_loss += self.focal_loss(tl_heats, gt_tl_heat)
+
+br_heats = [_sigmoid(b) for b in br_heats]
+focal_loss += self.focal_loss(br_heats, gt_br_heat)
+
+# additional focal loss for center keypoints
+ct_heats = [_sigmoid(c) for c in ct_heats]
+focal_loss += self.focal_loss(ct_heats, gt_ct_heat)
 ```
 
 ### CornerNet Saccade
@@ -252,6 +290,7 @@ for tl_tag, br_tag in zip(tl_tags, br_tags):
     pull, push = self.ae_loss(tl_tag, br_tag, gt_mask)
     pull_loss += pull
     push_loss += push
+    
 pull_loss = self.pull_weight * pull_loss
 push_loss = self.push_weight * push_loss
 ```
@@ -301,13 +340,31 @@ for tl_off, br_off in zip(tl_offs, br_offs):
     off_loss += self.off_loss(tl_off, gt_tl_off, gt_mask)
     off_loss += self.off_loss(br_off, gt_br_off, gt_mask)
 off_loss = self.off_weight * off_loss
+
+# CenterNet
+regr_loss = 0
+for tl_regr, br_regr, ct_regr in zip(tl_regrs, br_regrs, ct_regrs):
+    regr_loss += self.regr_loss(tl_regr, gt_tl_regr, gt_mask)
+    regr_loss += self.regr_loss(br_regr, gt_br_regr, gt_mask)
+    regr_loss += self.regr_loss(ct_regr, gt_ct_regr, gt_mask)
+regr_loss = self.regr_weight * regr_loss
 ```
 
-### sum loss
+## sum loss
+
+We use Adam to optimize the full training loss:
+
+![](../images/loss_sum.png)
+
+where α, β, and γ are the weights for the pull, push and offset loss respectively. We set both α and β to 0.1 and γ to 1. We find that 1 or larger values of α and β lead to poor performance.
 
 ```python
 # CornerNet, CornerNet Squeeze
+# self.loss = CornerNet_Loss(pull_weight=1e-1, push_weight=1e-1, off_weight=1)
 loss = (focal_loss + pull_loss + push_loss + off_loss) / max(len(tl_heats), 1)
+
+# CenterNet
+loss = (focal_loss + pull_loss + push_loss + regr_loss) / len(tl_heats)
 
 # CornerNet Saccade
 # extra loss: att_loss
