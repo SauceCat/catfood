@@ -137,7 +137,7 @@ class fire_module(nn.Module):
 
 ## residual vs. fire_module
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/corner_net/images/fire_module.png)
+![](../images/fire_module.png)
 
 ### conv1
 

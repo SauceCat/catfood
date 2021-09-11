@@ -23,7 +23,7 @@ for tl_heat, br_heat, ct_heat in zip(self.tl_heats, self.br_heats, self.ct_heats
 
 ## prediction module
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/corner_net/images/pred_modules.png)
+![](../images/pred_modules.png)
 
 **Fig. 7** The prediction module starts with a modified residual block, in which we replace the first convolution module with our corner pooling module. The modified residual block is then followed by a convolution module. We have multiple branches for predicting the heatmaps, embeddings and offsets.
 

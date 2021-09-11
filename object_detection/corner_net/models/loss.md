@@ -205,7 +205,7 @@ for att, gt_att in zip(atts, gt_atts):
 
 ## associative embedding loss
 
-![img](https://miro.medium.com/max/1008/1*lcEjh4mTgt7HWPITsdz7Hg.png)
+![img](../images/ae_loss.png)
 
 ```python
 def _ae_loss(tag0, tag1, mask):

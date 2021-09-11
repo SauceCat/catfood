@@ -272,11 +272,11 @@ class hg_module(nn.Module):
     ):
         super(hg_module, self).__init__()
         
-		# curr_mod, next_mod = 2, 2
+        # curr_mod, next_mod = 2, 2
         curr_mod = modules[0]
         next_mod = modules[1]
         
-		# curr_dim, next_dim = 256, 256
+        # curr_dim, next_dim = 256, 256
         curr_dim = dims[0]
         next_dim = dims[1]
 

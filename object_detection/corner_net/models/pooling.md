@@ -6,7 +6,7 @@
 
 **Fig. 6** The top-left corner pooling layer can be implemented very efficiently. We scan from right to left for the horizontal max-pooling and from bottom to top for the vertical max-pooling. We then add two max-pooled feature maps.
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/corner_net/images/pred_modules.png)
+![](../images/pred_modules.png)
 
 **Fig. 7** The prediction module starts with a modified residual block, in which we replace the first convolution module with our corner pooling module. The modified residual block is then followed by a convolution module. We have multiple branches for predicting the heatmaps, embeddings and offsets.
 
@@ -131,11 +131,11 @@ br_mod = self.br_modules[-1](cnvs[-1])
 
 # Center Pooling, Cascade Corner Pooling
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/center_net/images/pooling_2.png)
+![](../images/pooling_2.png)
 
 **Figure 4:** (a) Center pooling takes the maximum values in both horizontal and vertical directions. (b) Corner pooling only takes the maximum values in boundary directions. (c) Cascade corner pooling takes the maximum values in both boundary directions and internal directions of objects.
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/center_net/images/pooling.png)
+![](../images/pooling.png)
 
 **Figure 5:** The structures of the center pooling module (a) and the cascade top corner pooling module (b). We achieve center pooling and the cascade corner pooling by combining the corner pooling at different directions.
 
