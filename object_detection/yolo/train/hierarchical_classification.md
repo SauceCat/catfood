@@ -7,17 +7,17 @@ To build this tree we examine the visual nouns in ImageNet and look at their pat
 
 The final result is **WordTree**, a hierarchical model of visual concepts. To perform classification with WordTree we predict conditional probabilities at each node. For example, at the “terrier” node we predict:
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/yolo/images/yolov2_wordtree_node.png)
+![](../images/yolov2_wordtree_node.png)
 
 If we want to compute the absolute probability for a particular node we simply follow the path through the tree to the root node and multiply by conditional probabilities. For classification purposes, we assume that the image contains an object: `Pr(physical object) = 1`.
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/yolo/images/yolov2_wordtree_node_2.png)
+![](../images/yolov2_wordtree_node_2.png)
 
 To validate this approach, we train the Darknet-19 model on WordTree built from the 1000-class ImageNet and named it **WordTree1k**. To build **WordTree1k**, we add all the intermediate nodes and expands the label space from `1000` to `1369`.
 
 During training, we propagate ground truth labels up the tree. Therefore, if an image is labeled as a “Norfolk terrier”, it also gets labeled as a “dog” and a “mammal”, etc. To compute the conditional probabilities, our model predicts a vector of `1369` values and we compute the softmax over all synsets that are hyponyms of the same concept.
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/yolo/images/yolov2_wordtree1k.png)
+![](../images/yolov2_wordtree1k.png)
 
 **Figure 5:** Prediction on ImageNet vs WordTree. Most ImageNet models use one large softmax to predict a probability distribution. Using WordTree we perform multiple softmax operations over co-hyponyms.
 
