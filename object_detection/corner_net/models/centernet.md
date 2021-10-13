@@ -1,5 +1,7 @@
 # CenterNet-104
 
+Almost the same as CornerNet, only an extra center keypoint.
+
 ```python
 class model(kp):
 	# make_kp_layer

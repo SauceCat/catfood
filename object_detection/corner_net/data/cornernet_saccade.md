@@ -1,12 +1,8 @@
 # CornerNet Saccade
 
-## function inputs
+## Allocating memory
 
-```python
-def cornernet_saccade(system_configs, db, k_ind, data_aug, debug):
-```
-
-## allocating memory
+Compare with CornerNet, there is extra attentions.
 
 ```python
 max_objects = 128
@@ -61,6 +57,8 @@ attentions = [
 
 ## Loop for each image
 
+Compare with CornerNet, need to generate attention maps.
+
 ```python
 db_size = db.db_inds.size
 for b_ind in range(batch_size):
@@ -87,27 +85,11 @@ for b_ind in range(batch_size):
     # clip and only keep valid detections
     detections, clip_inds = clip_detections(border, detections)
     keep_inds = keep_inds[clip_inds]
-    
-	def ref_scale(detections, random_crop=False):
-        if detections.shape[0] == 0:
-            return None, None
+```
 
-        if random_crop and np.random.uniform() > 0.7:
-            return None, None
+### scale based on a random reference detection
 
-        ref_ind = np.random.randint(detections.shape[0])
-        ref_det = detections[ref_ind].copy()
-        ref_h = ref_det[3] - ref_det[1]
-        ref_w = ref_det[2] - ref_det[0]
-        ref_hw = max(ref_h, ref_w)
-        # ref_h, ref_w, ref_hw: 187.6, 126.45999, 187.6
-
-        if ref_hw > 96:
-            return np.random.randint(low=96, high=255) / ref_hw, ref_ind
-        elif ref_hw > 32:
-            return np.random.randint(low=32, high=97) / ref_hw, ref_ind
-        return np.random.randint(low=16, high=33) / ref_hw, ref_ind
-
+```python
     # scale based on a random reference detection
     scale, ref_ind = ref_scale(detections, random_crop=rand_crop)
     # scale: 0.5170575524740466, ref_ind: 0
@@ -122,77 +104,42 @@ for b_ind in range(batch_size):
     image, detections = scale_image_detections(image, detections, scale)
     # image.shape: (172, 258, 3)
     ref_detection = detections[ref_ind].copy()
+```
 
+```python
+def ref_scale(detections, random_crop=False):
+    if detections.shape[0] == 0:
+        return None, None
+
+    if random_crop and np.random.uniform() > 0.7:
+        return None, None
+
+    ref_ind = np.random.randint(detections.shape[0])
+    ref_det = detections[ref_ind].copy()
+    ref_h = ref_det[3] - ref_det[1]
+    ref_w = ref_det[2] - ref_det[0]
+    ref_hw = max(ref_h, ref_w)
+    # ref_h, ref_w, ref_hw: 187.6, 126.45999, 187.6
+
+    if ref_hw > 96:
+        return np.random.randint(low=96, high=255) / ref_hw, ref_ind
+    elif ref_hw > 32:
+        return np.random.randint(low=32, high=97) / ref_hw, ref_ind
+    return np.random.randint(low=16, high=33) / ref_hw, ref_ind
+```
+
+### crop image and detections
+
+```python
     # input_size: [255, 255]
     # rand_center: True
     image, detections, border = crop_image_dets(
         image, detections, ref_ind, input_size, rand_center=rand_center
     )
     # image.shape: (255, 255, 3)
-
-    # clip and only keep valid detections
-    detections, clip_inds = clip_detections(border, detections)
-    keep_inds = keep_inds[clip_inds]
-
-    # input_size: [255, 255], output_size: [64, 64]
-    width_ratio = output_size[1] / input_size[1]
-    height_ratio = output_size[0] / input_size[0]
-
-    # flipping an image randomly
-    if not debug and np.random.uniform() > 0.5:
-        image[:] = image[:, ::-1, :]
-        width = image.shape[1]
-        detections[:, [0, 2]] = width - detections[:, [2, 0]] - 1
-        
-	def create_attention_mask(atts, ratios, sizes, detections):
-        # atts.shape: [(16, 16), (32, 32), (64, 64)]
-        # ratios: [16, 8, 4]
-        # sizes: [[96, 256], [32, 96], [0, 32]]
-        for det in detections:
-            # det: [45.551296, 1.9675328, 186.58896, 247.96751, 24.]
-            width = det[2] - det[0]
-            height = det[3] - det[1]
-            # width, height: 141.03766, 245.99998
-
-            max_hw = max(width, height)
-            for att, ratio, size in zip(atts, ratios, sizes):
-                if max_hw >= size[0] and max_hw <= size[1]:
-                    x = (det[0] + det[2]) / 2
-                    y = (det[1] + det[3]) / 2
-                    x = (x / ratio).astype(np.int32)
-                    y = (y / ratio).astype(np.int32)
-                    # x, y: 7, 7
-                    att[y, x] = 1
-
-    create_attention_mask(
-        [att[b_ind, 0] for att in attentions], att_ratios, att_ranges, detections
-    )
-    
-	def bbox_overlaps(a_dets, b_dets):
-        a_widths = a_dets[:, 2] - a_dets[:, 0]
-        a_heights = a_dets[:, 3] - a_dets[:, 1]
-        a_areas = a_widths * a_heights
-
-        b_widths = b_dets[:, 2] - b_dets[:, 0]
-        b_heights = b_dets[:, 3] - b_dets[:, 1]
-        b_areas = b_widths * b_heights
-
-        return a_areas / b_areas
-
-    overlaps = bbox_overlaps(detections, orig_detections[keep_inds]) > 0.5
-
-    if not debug:
-        image = image.astype(np.float32) / 255.0
-        color_jittering_(data_rng, image)
-        lighting_(data_rng, image, 0.1, db.eig_val, db.eig_vec)
-        normalize_(image, db.mean, db.std)
-    images[b_ind] = image.transpose((2, 0, 1))
 ```
 
 ```python
-# image, detections, border = crop_image_dets(
-#	image, detections, ref_ind, input_size, rand_center=rand_center
-# )
 def crop_image_dets(
     image, dets, ind, input_size, 
     output_size=None, random_crop=True, rand_center=True
@@ -257,6 +204,84 @@ def crop_image_dets(
     return image, dets, border
 ```
 
+### continue
+
+```python
+    # clip and only keep valid detections
+    detections, clip_inds = clip_detections(border, detections)
+    keep_inds = keep_inds[clip_inds]
+
+    # input_size: [255, 255], output_size: [64, 64]
+    width_ratio = output_size[1] / input_size[1]
+    height_ratio = output_size[0] / input_size[0]
+
+    # flipping an image randomly
+    if not debug and np.random.uniform() > 0.5:
+        image[:] = image[:, ::-1, :]
+        width = image.shape[1]
+        detections[:, [0, 2]] = width - detections[:, [2, 0]] - 1
+```
+
+### create attention mask
+
+```python
+    create_attention_mask(
+        [att[b_ind, 0] for att in attentions], att_ratios, att_ranges, detections
+    )
+```
+
+```python
+def create_attention_mask(atts, ratios, sizes, detections):
+    # atts.shape: [(16, 16), (32, 32), (64, 64)]
+    # ratios: [16, 8, 4]
+    # sizes: [[96, 256], [32, 96], [0, 32]]
+    for det in detections:
+        # det: [45.551296, 1.9675328, 186.58896, 247.96751, 24.]
+        width = det[2] - det[0]
+        height = det[3] - det[1]
+        # width, height: 141.03766, 245.99998
+
+        max_hw = max(width, height)
+        for att, ratio, size in zip(atts, ratios, sizes):
+            if max_hw >= size[0] and max_hw <= size[1]:
+                x = (det[0] + det[2]) / 2
+                y = (det[1] + det[3]) / 2
+                x = (x / ratio).astype(np.int32)
+                y = (y / ratio).astype(np.int32)
+                # x, y: 7, 7
+                att[y, x] = 1
+```
+
+### overlap between detections and orig_detections
+
+```python
+    overlaps = bbox_overlaps(detections, orig_detections[keep_inds]) > 0.5
+```
+
+```python
+def bbox_overlaps(a_dets, b_dets):
+    a_widths = a_dets[:, 2] - a_dets[:, 0]
+    a_heights = a_dets[:, 3] - a_dets[:, 1]
+    a_areas = a_widths * a_heights
+
+    b_widths = b_dets[:, 2] - b_dets[:, 0]
+    b_heights = b_dets[:, 3] - b_dets[:, 1]
+    b_areas = b_widths * b_heights
+
+    return a_areas / b_areas
+```
+
+### continue
+
+```python
+    if not debug:
+        image = image.astype(np.float32) / 255.0
+        color_jittering_(data_rng, image)
+        lighting_(data_rng, image, 0.1, db.eig_val, db.eig_vec)
+        normalize_(image, db.mean, db.std)
+    images[b_ind] = image.transpose((2, 0, 1))
+```
+
 ## For each image, loop for each detection
 
 ```python
@@ -317,7 +342,7 @@ for ind, (detection, overlap) in enumerate(zip(detections, overlaps)):
         draw_gaussian(br_valids[b_ind, category], [xbr, ybr], radius)
 ```
 
-## mask out the invalid part
+## Mask out the invalid part
 
 ```python
 tl_valids = (tl_valids == 0).astype(np.float32)
@@ -328,21 +353,11 @@ for b_ind in range(batch_size):
     tag_masks[b_ind, :tag_len] = 1
 ```
 
-## final outputs
+## Final outputs
+
+Compare to CornerNet, there is extra attentions.
 
 ```python
-images = torch.from_numpy(images)
-tl_heats = torch.from_numpy(tl_heats)
-br_heats = torch.from_numpy(br_heats)
-tl_regrs = torch.from_numpy(tl_regrs)
-br_regrs = torch.from_numpy(br_regrs)
-tl_tags = torch.from_numpy(tl_tags)
-br_tags = torch.from_numpy(br_tags)
-tag_masks = torch.from_numpy(tag_masks)
-tl_valids = torch.from_numpy(tl_valids)
-br_valids = torch.from_numpy(br_valids)
-attentions = [torch.from_numpy(att) for att in attentions]
-
 return (
     {
         "xs": [images],
@@ -357,6 +372,23 @@ return (
             tl_valids,
             br_valids,
             attentions,
+        ],
+    },
+    k_ind,
+)
+
+# CornerNet
+return (
+    {
+        "xs": [images],
+        "ys": [
+            tl_heatmaps,
+            br_heatmaps,
+            tag_masks,
+            tl_regrs,
+            br_regrs,
+            tl_tags,
+            br_tags,
         ],
     },
     k_ind,

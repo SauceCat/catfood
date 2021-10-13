@@ -6,7 +6,7 @@ During training, instead of equally penalizing negative locations, we reduce the
 
 As shown in **Fig. 5**, boxes (green dotted rectangles) whose corners are within the radius of the positive locations (orange circles) still have large overlaps with the ground-truth annotations (red solid rectangles).
 
-## for each detection
+## For each detection
 
 ```python
 # top-left and bottom-right
@@ -58,9 +58,9 @@ draw_gaussian(
 )
 ```
 
-### determine the radius
+### Determine the radius
 
-We determine the radius by the size of an object by ensuring that a pair of points within the radius would generate a bounding box with at least t (t=0.3 in all experiments) IoU with the ground-truth annotation. 
+We determine the radius by the size of an object by ensuring that a pair of points within the radius would generate a bounding box with at least t (`t=0.3` in all experiments) IoU with the ground-truth annotation. 
 
 ```python
 def gaussian_radius(det_size, min_overlap):
@@ -89,7 +89,7 @@ def gaussian_radius(det_size, min_overlap):
     return min(r1, r2, r3)
 ```
 
-### the amount of penalty
+### The amount of penalty
 
 Given the radius, the amount of penalty reduction is given by an unnormalized 2D Gaussian,
 

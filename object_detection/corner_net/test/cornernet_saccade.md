@@ -6,7 +6,7 @@ CornerNet-Saccade detects objects within small regions around possible object lo
 - We zoom into each location and crop a small region around that location.
 - Then we detect objects in top k regions and merge the detections by NMS.
 
-## input
+## Input
 
 ```python
 # image.shape: (427, 640, 3)
@@ -60,7 +60,7 @@ def cornernet_saccade_inference(db, nnet, image, decode_func=batch_decode):
     num_crops = 0
 ```
 
-## get possible object locations
+## Get possible object locations
 
 CornerNet-Saccade uses the same network for attention maps and bounding boxes. Hence, when CornerNet-Saccade processes the downsized image to predict the attention maps, it may already predict boxes for some larger objects in the image. But the boxes may not be accurate. We also zoom into those objects to obtain better boxes.
 
@@ -385,7 +385,7 @@ def location_nms(locations, thresh=15):
     return np.stack(next_locations) if next_locations else np.zeros((0, 4))
 ```
 
-## loop and get detections
+## Loop and get detections
 
 CornerNet-Saccade uses the locations obtained from the downsized image to determine where to process. We examine the regions at a higher resolution based on the scale information obtained in the first step. Usually only iterate for once: only obtain and utilize attention maps from the very begining. 
 
@@ -459,7 +459,7 @@ for ind in range(1, num_iterations + 1):
 
 Based on the locations obtained from the attention maps, we can determine different zoom-in scales for different object sizes: ss for small objects, sm for medium objects, and sl for large objects. 
 
-In general, ss > sm > sl because we should zoom in more for smaller objects, so we set ss = 4, sm = 2 and sl = 1. At each possible location (x, y), we enlarge the downsized image by si, where i ∈ {s, m, l} depending on the coarse object scale. Then we apply CornerNet-Saccade to a 255×255 window centered at the location.
+In general, `ss > sm > sl` because we should zoom in more for smaller objects, so we set `ss = 4, sm = 2 and sl = 1`. At each possible location `(x, y)`, we enlarge the downsized image by `si`, where `i ∈ {s, m, l}` depending on the coarse object scale. Then we apply CornerNet-Saccade to a `255 × 255` window centered at the location.
 
 There are some important implementation details to make processing efficient. (`crop_image_gpu`)
 

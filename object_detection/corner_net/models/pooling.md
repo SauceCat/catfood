@@ -10,9 +10,9 @@
 
 **Fig. 7** The prediction module starts with a modified residual block, in which we replace the first convolution module with our corner pooling module. The modified residual block is then followed by a convolution module. We have multiple branches for predicting the heatmaps, embeddings and offsets.
 
-- The first part of the module is a modified version of the residual block. In this modified residual block, we first process the features from the backbone network by two 3×3 Conv-BN-ReLU modules with 128 channels and then apply a corner pooling layer. 
-- Following the design of a residual block, we then feed the pooled features into a 3×3 Conv-BN layer with 256 channels and add back the projection shortcut. 
-- The modified residual block is followed by a 3×3 Conv-BN-ReLU module with 256 channels, and 3 Conv-ReLU-Conv layers to produce the heatmaps, embeddings, and offsets.
+- The first part of the module is a modified version of the residual block. In this modified residual block, we first process the features from the backbone network by two `3 × 3` Conv-BN-ReLU modules with 128 channels and then apply a corner pooling layer. 
+- Following the design of a residual block, we then feed the pooled features into a `3 × 3` Conv-BN layer with 256 channels and add back the projection shortcut. 
+- The modified residual block is followed by a `3 × 3` Conv-BN-ReLU module with 256 channels, and 3 Conv-ReLU-Conv layers to produce the heatmaps, embeddings, and offsets.
 
 ```python
 class corner_pool(nn.Module):
@@ -73,9 +73,9 @@ class corner_pool(nn.Module):
         # conv1.shape: torch.Size([1, 256, 128, 128])
         bn1 = self.bn1(conv1)
         # bn1.shape: torch.Size([1, 256, 128, 128])
+        
         relu1 = self.relu1(p_bn1 + bn1)
         # relu1.shape: torch.Size([1, 256, 128, 128])
-
         conv2 = self.conv2(relu1)
         # conv2.shape: torch.Size([1, 256, 128, 128])
 
@@ -170,7 +170,7 @@ class pool(nn.Module):
     def forward(self, x):
         # Example: Top Left Pooling
         
-        # pool1: Cascade Top Corner Pooling Module
+        # Cascade Top Corner Pooling Module
         p1_conv1 = self.p1_conv1(x)
         # LeftPool
         look_conv1 = self.look_conv1(x)
@@ -179,7 +179,7 @@ class pool(nn.Module):
         # TopPool
         pool1 = self.pool1(P1_look_conv)
 
-        # pool2: Cascade Left Corner Pooling Module
+        # Cascade Left Corner Pooling Module
         p2_conv1 = self.p2_conv1(x)
         # TopPool
         look_conv2 = self.look_conv2(x)

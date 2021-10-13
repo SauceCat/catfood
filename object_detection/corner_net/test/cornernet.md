@@ -1,6 +1,6 @@
 # CornerNet
 
-## input
+## Input
 
 ```python
 # image.shape: (427, 640, 3)
@@ -19,7 +19,7 @@ def cornernet_inference(db, nnet, image, decode_func=decode):
     detections = []
 ```
 
-## multi-scale inference
+## Multi-scale inference
 
 Instead of resizing an image to a fixed size, we maintain the original resolution of the image and pad it with zeros before feeding it to CornerNet. Both the original and flipped images are used for testing. 
 
@@ -94,7 +94,7 @@ for scale in scales:
     detections.append(dets)
 ```
 
-## get detections for each category
+## Get detections for each category
 
 We combine the detections from the original and flipped images, and apply soft-nms (Bodla et al., 2017) to suppress redundant detections. Only the top 100 detections are reported.
 
@@ -149,7 +149,7 @@ if len(scores) > max_per_image:
 return top_bboxes
 ```
 
-## decode detections
+## Decode detections
 
 ```python
 def decode(nnet, images, K, ae_threshold=0.5, kernel=3, num_dets=1000):

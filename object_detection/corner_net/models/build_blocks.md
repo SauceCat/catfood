@@ -141,7 +141,7 @@ class fire_module(nn.Module):
 
 ### conv1
 
-residual: `conv1-bn1-relu1`
+#### residual: `conv1-bn1-relu1`
 
 ```python
 # x.shape: torch.Size([4, 128, 256, 256])
@@ -162,9 +162,9 @@ self.bn1 = nn.BatchNorm2d(256)
 self.relu1 = nn.ReLU(inplace=True)
 ```
 
-fire_module: `conv1-bn1`
+#### fire_module: `conv1-bn1`
 
-The fire module first reduces the number of input channels with a squeeze layer consisting of 1×1 filters.
+The fire module first reduces the number of input channels with a squeeze layer consisting of `1 × 1` filters.
 
 ```python
 # x.shape: torch.Size([13, 256, 64, 64])
@@ -184,7 +184,7 @@ self.bn1 = nn.BatchNorm2d(128)
 
 ### conv2
 
-residual: `conv2-bn2`
+#### residual: `conv2-bn2`
 
 ```python
 # relu1.shape: torch.Size([4, 256, 128, 128])
@@ -203,9 +203,9 @@ self.conv2 = nn.Conv2d(
 self.bn2 = nn.BatchNorm2d(256)
 ```
 
-fire_module: `conv2-bn2`
+#### fire_module: `conv2-bn2`
 
-Then, it feeds the result through an expand layer consisting of a mixture of 1×1 and 3×3 filters. Furthermore, inspired by the success of MobileNets, we replace the 3×3 standard convolution in the second layer with a 3×3 depth-wise separable convolution, which further improves inference time.
+Then, it feeds the result through an expand layer consisting of a mixture of `1 × 1` and `3 × 3` filters. Furthermore, inspired by the success of MobileNets, we replace the `3 × 3` standard convolution in the second layer with a `3 × 3` depth-wise separable convolution, which further improves inference time.
 
 ```python
 # bn1.shape: torch.Size([13, 128, 64, 64]) 
@@ -241,7 +241,7 @@ self.bn2 = nn.BatchNorm2d(256)
 
 ### skip connection
 
-residual: `conv1-bn1-relu1-conv2-bn2 + conv-bn`
+#### residual: `conv1-bn1-relu1-conv2-bn2 + conv-bn`
 
 ```python
 # x.shape: torch.Size([4, 128, 256, 256])
@@ -269,7 +269,7 @@ self.skip = (
 self.relu = nn.ReLU(inplace=True)
 ```
 
-fire_module: `conv1-bn1-conv2-bn2 + x`
+#### fire_module: `conv1-bn1-conv2-bn2 + x`
 
 ```python
 # fire_module

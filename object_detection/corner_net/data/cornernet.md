@@ -1,12 +1,6 @@
 # CornerNet
 
-## function inputs
-
-```python
-def cornernet(system_configs, db, k_ind, data_aug, debug):
-```
-
-## allocating memory
+## Allocating memory
 
 ```python
 max_tag_len = 128
@@ -44,6 +38,8 @@ tag_lens = np.zeros((batch_size,), dtype=np.int32)
 ```
 
 ## Loop for each image
+
+**Augmentations:** random crop, random flip, random color jittering, random lighting adjustment
 
 ```python
 db_size = db.db_inds.size
@@ -118,7 +114,7 @@ for ind, detection in enumerate(detections):
     fxbr = xbr * width_ratio
     fybr = ybr * height_ratio
 	
-    # round up
+    # round up (lose precision here)
     xtl = int(fxtl)
     ytl = int(fytl)
     xbr = int(fxbr)
@@ -130,7 +126,8 @@ for ind, detection in enumerate(detections):
         height = detection[3] - detection[1]
         width = math.ceil(width * width_ratio)
         height = math.ceil(height * height_ratio)
-
+		
+        # get gaussian radius
         if gaussian_rad == -1:
             # (height, width): (116, 62)
             # gaussian_iou: 0.3
@@ -164,7 +161,9 @@ for ind, detection in enumerate(detections):
     tag_lens[b_ind] += 1
 ```
 
-## mask out the invalid part
+## Mask out the invalid part
+
+Images in the same batch have different number of objects.
 
 ```python
 for b_ind in range(batch_size):
@@ -172,18 +171,9 @@ for b_ind in range(batch_size):
     tag_masks[b_ind, :tag_len] = 1
 ```
 
-## final outputs
+## Final outputs
 
 ```python
-images = torch.from_numpy(images)
-tl_heatmaps = torch.from_numpy(tl_heatmaps)
-br_heatmaps = torch.from_numpy(br_heatmaps)
-tl_regrs = torch.from_numpy(tl_regrs)
-br_regrs = torch.from_numpy(br_regrs)
-tl_tags = torch.from_numpy(tl_tags)
-br_tags = torch.from_numpy(br_tags)
-tag_masks = torch.from_numpy(tag_masks)
-
 return (
     {
         "xs": [images],

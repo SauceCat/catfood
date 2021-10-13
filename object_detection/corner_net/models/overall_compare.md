@@ -1,6 +1,6 @@
 # Compare: CornerNet, CornerNet Squeeze, CornerNet Saccade, CenterNet
 
-## heatmaps initialization
+## Heatmaps initialization
 
 As we apply focal loss, we follow (Lin et al., 2017) to set the biases in the convolution layers that predict the corner heatmaps.
 
@@ -21,7 +21,7 @@ for tl_heat, br_heat, ct_heat in zip(self.tl_heats, self.br_heats, self.ct_heats
     ct_heat[-1].bias.data.fill_(-2.19)
 ```
 
-## prediction module
+## Prediction module
 
 ![](../images/pred_modules.png)
 
@@ -56,7 +56,7 @@ def make_kp_layer(cnv_dim, curr_dim, out_dim):
 
 ### CornerNet Squeeze
 
-We replace the 3×3 filters with 1×1 filters in the prediction modules of CornerNet.
+We replace the `3 × 3` filters with `1 × 1` filters in the prediction modules of CornerNet.
 
 ```python
 def _pred_mod(self, dim=80):
@@ -78,7 +78,7 @@ def _pred_mod(self, dim=80):
 
 ## merge module
 
-We apply a 1×1 Conv-BN module to both the input and output of the first hourglass module. We then merge them by element-wise addition followed by a ReLU and a residual block with 256 channels, which is then used as the input to the second hourglass module. 
+We apply a `1 × 1` Conv-BN module to both the input and output of the first hourglass module. We then merge them by element-wise addition followed by a ReLU and a residual block with 256 channels, which is then used as the input to the second hourglass module. 
 
 ```python
 cnvs = nn.ModuleList([
@@ -122,7 +122,7 @@ nn.ModuleList([
 
 Before the hourglass modules, we reduce the image resolution by 4 times using:
 
-- a 7×7 convolution module with stride 2 and 128 channels
+- a `7×7` convolution module with stride 2 and 128 channels
 - followed by a residual block with stride 2 and 256 channels.
 
 ### CornerNet, CornerNet Saccade, CenterNet
@@ -215,7 +215,7 @@ hg_mods = nn.ModuleList([
 
 ### CornerNet Squeeze
 
-**CornerNet-Squeeze** speeds up inference by reducing the amount of processing per pixel. It incorporates ideas from SqueezeNet and MobileNets and introduces a new, compact hourglass backbone that makes extensive use of 1×1 convolution, bottleneck layer, and depth-wise separable convolution. CornerNet-Squeeze is faster and more accurate than YOLOv3, the state-of-the-art real-time detector.
+**CornerNet-Squeeze** speeds up inference by reducing the amount of processing per pixel. It incorporates ideas from SqueezeNet and MobileNets and introduces a new, compact hourglass backbone that makes extensive use of `1 × 1` convolution, bottleneck layer, and depth-wise separable convolution. CornerNet-Squeeze is faster and more accurate than YOLOv3, the state-of-the-art real-time detector.
 
 We reduce the maximum feature map resolution of the hourglass modules by adding one more downsampling layer before the hourglass modules and **remove one downsampling layer in each hourglass module**. 
 
@@ -249,8 +249,9 @@ hg_mods = nn.ModuleList(
 
 Every skip connection also consists of 2 residual modules. There are 4 residual modules with 512 channels in the middle of an hourglass module.
 
+#### CornerNet, CornerNet Saccade, CenterNet
+
 ```python
-# CornerNet, CornerNet Saccade, CenterNet
 # x.shape: torch.Size([4, 256, 128, 128])
 up1 = self.up1(x)
 # up1.shape: torch.Size([4, 256, 128, 128])
@@ -260,8 +261,11 @@ def _make_layer(inp_dim=256, out_dim=256, modules=2):
     layers = [residual(inp_dim=256, out_dim=256, k=3, stride=1)]
     layers += [residual(out_dim=256, out_dim=256, k=3, stride=1) for _ in range(1, 2)]
     return nn.Sequential(*layers)
+```
 
-# CornerNet Squeeze
+#### CornerNet Squeeze
+
+```python
 # x.shape: torch.Size([13, 256, 64, 64])
 up1 = self.up1(x)
 # up1.shape: torch.Size([13, 256, 64, 64])
@@ -297,8 +301,9 @@ def make_pool_layer(dim=256):
 
 Downsampling and prepare input for recursive module: `curr_dim -> next_dim`. Instead of using max pooling, we simply use stride 2 to reduce feature resolution.
 
+#### CornerNet, CornerNet Saccade, CenterNet
+
 ```python
-# CornerNet, CornerNet Saccade, CenterNet
 # max1.shape: torch.Size([4, 256, 128, 128])
 low1 = self.low1(max1)
 # low1.shape: torch.Size([4, 256, 64, 64])
@@ -308,8 +313,11 @@ def make_hg_layer(inp_dim=256, out_dim=256, modules=2):
     layers  = [residual(inp_dim=256, out_dim=256, k=3, stride=2)]
     layers += [residual(out_dim=256, out_dim=256, k=3, stride=1) for _ in range(1, 2)]
     return nn.Sequential(*layers)
+```
 
-# CornerNet Squeeze
+#### CornerNet Squeeze
+
+```python
 # max1.shape: torch.Size([13, 256, 64, 64])
 low1 = self.low1(max1)
 # low1.shape: torch.Size([13, 256, 32, 32])
@@ -345,8 +353,9 @@ low2 = self.low2(low1)
 
 Convert dim back to current dim: `next_dim -> curr_dim`
 
+#### CornerNet, CornerNet Saccade, CenterNet
+
 ```python
-# CornerNet, CornerNet Saccade, CenterNet
 # low2.shape: torch.Size([4, 256, 64, 64])
 low3 = self.low3(low2)
 # low3.shape: torch.Size([4, 256, 64, 64])
@@ -356,8 +365,11 @@ def _make_layer_revr(inp_dim=256, out_dim=256, modules=2):
     layers  = [residual(inp_dim=256, inp_dim=256, k=3, stride=1) for _ in range(modules - 1)]
     layers += [residual(inp_dim=256, out_dim=256, k=3, stride=1)]
     return nn.Sequential(*layers)
+```
 
-# CornerNet Squeeze
+#### CornerNet Squeeze
+
+```python
 # low2.shape: torch.Size([13, 256, 32, 32])
 low3 = self.low3(low2)
 # low3.shape: torch.Size([13, 256, 32, 32])
@@ -374,10 +386,11 @@ def make_layer_revr(inp_dim=256, out_dim=256, modules=2):
 
 Upsampling to match the resolution of the current layer. When we upsample the features, we apply 2 residual modules (`self.low3`) followed by a nearest neighbor upsampling (`self.up2`).
 
-**CornerNet Squeeze:** we replace the nearest neighbor upsampling in the hourglass network with transpose convolution with a 4×4 kernel.
+**CornerNet Squeeze:** we replace the nearest neighbor upsampling in the hourglass network with transpose convolution with a `4×4` kernel.
+
+#### CornerNet, CornerNet Saccade, CenterNet
 
 ```python
-# CornerNet, CornerNet Saccade, CenterNet
 # low3.shape: torch.Size([4, 256, 64, 64])
 up2 = self.up2(low3)
 # up2.shape: torch.Size([4, 256, 128, 128]) 
@@ -393,8 +406,11 @@ class upsample(nn.Module):
 
     def forward(self, x):
         return nn.functional.interpolate(x, scale_factor=self.scale_factor)
+```
 
-# CornerNet Squeeze
+#### CornerNet Squeeze
+
+```python
 # low3.shape: torch.Size([13, 256, 32, 32])
 up2 = self.up2(low3)
 # up2.shape: torch.Size([13, 256, 64, 64])

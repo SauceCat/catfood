@@ -1,6 +1,6 @@
 # CenterNet
 
-## input
+## Input
 
 ```python
 def kp_detection(db, nnet, result_dir, debug=False, decode_func=kp_decode):
@@ -18,7 +18,7 @@ def kp_detection(db, nnet, result_dir, debug=False, decode_func=kp_decode):
         center_points = []
 ```
 
-## multi-scale inference
+## Multi-scale inference
 
 ```python
 # multi-scale: scales: [0.6, 1, 1.2, 1.5, 1.8]
@@ -95,13 +95,13 @@ for scale in scales:
         center_points.append(center)
 ```
 
-## post-processing
+## Post-processing
 
 ![](../images/center_region.png)
 
 **Figure 3:** (a) The central region when n = 3. (b) The central region when n = 5. The solid rectangles denote the predicted bounding boxes and the shaded regions denote the central regions. In this paper, n is set to be 3 and 5 for the scales of bounding boxes less and greater than 150, respectively.
 
-### input
+### Input
 
 ```python
 detections = np.concatenate(detections, axis=1)
@@ -133,7 +133,7 @@ To effectively filter out the incorrect bounding boxes, we leverage the detected
 - (3) define a central region for each bounding box and check if the central region contains center keypoints. Note that the class labels of the checked center keypoints should be same as that of the bounding box; 
 - (4) if a center keypoint is detected in the central region, we will preserve the bounding box. The score of the bounding box will be replaced by the average scores of the three points. If there are no center keypoints detected in its central region, the bounding box will be removed.
 
-### small objects
+### Small objects
 
 ```python
 # obtain central region
@@ -187,7 +187,7 @@ s_detections[:, 4][ind_s_new_score] = (
 ) / 3
 ```
 
-### large objects
+### Large objects
 
 Similar as small objects.
 
@@ -237,7 +237,7 @@ l_detections[:, 4][ind_l_new_score] = (
 ) / 3
 ```
 
-## get detections for each category
+## Get detections for each category
 
 ```python
 detections = np.concatenate([l_detections, s_detections], axis=0)
@@ -281,7 +281,7 @@ if len(scores) > max_per_image:
 return top_bboxes
 ```
 
-## decode detections
+## Decode detections
 
 ```python
 def kp_decode(nnet, images, K, ae_threshold=0.5, kernel=3):

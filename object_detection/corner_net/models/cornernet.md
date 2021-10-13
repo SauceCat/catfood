@@ -184,7 +184,7 @@ class hg_net(nn.Module):
         return self._test(*xs, **kwargs)
 ```
 
-## hourglass backbone
+## Hourglass backbone
 
 ### initialization
 
@@ -221,7 +221,7 @@ class hg(nn.Module):
 
 ### forward
 
-`self._merge_mod()`: We apply a 1×1 Conv-BN module to both the input and output of the first hourglass module. We then merge them by element-wise addition followed by a ReLU and a residual block with 256 channels, which is then used as the input to the second hourglass module. 
+`self._merge_mod()`: We apply a `1 × 1` Conv-BN module to both the input and output of the first hourglass module. We then merge them by element-wise addition followed by a ReLU and a residual block with 256 channels, which is then used as the input to the second hourglass module. 
 
 ```python
 class hg(nn.Module):
@@ -253,7 +253,7 @@ class hg(nn.Module):
 
 ## hg_module
 
-We reduce feature resolutions 5 times and increase the number of feature channels along the way (256, 384, 384, 384, 512).
+We reduce feature resolutions 5 times and increase the number of feature channels along the way `(256, 384, 384, 384, 512)`.
 
 ```python
 class hg_module(nn.Module):

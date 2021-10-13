@@ -134,7 +134,7 @@ class model(saccade_net):
 
 ## Attention maps
 
-We predict the attention maps by using feature maps at different scales from the backbone hourglass network. The feature maps from the upsampling layers in the hourglass are used to predict the attention maps. The feature maps at finer scales are used for smaller objects and the ones at coarser scales are for larger objects. We predict the attention maps by applying a 3×3 Conv-ReLU module followed by a 1×1 Conv-Sigmoid module to each feature map.
+We predict the attention maps by using feature maps at different scales from the backbone hourglass network. The feature maps from the upsampling layers in the hourglass are used to predict the attention maps. The feature maps at finer scales are used for smaller objects and the ones at coarser scales are for larger objects. We predict the attention maps by applying a `3 × 3` Conv-ReLU module followed by a `1 × 1` Conv-Sigmoid module to each feature map.
 
 ### train
 
@@ -307,7 +307,7 @@ class saccade_net(nn.Module):
         return self._test(*xs, **kwargs)
 ```
 
-## hourglass with saccade backbone
+## Hourglass with saccade backbone
 
 ### initialization
 
@@ -345,7 +345,7 @@ class saccade(nn.Module):
 
 ### forward
 
-`self._merge_mod()`: We apply a 1×1 Conv-BN module to both the input and output of the first hourglass module. We then merge them by element-wise addition followed by a ReLU and a residual block with 256 channels, which is then used as the input to the second hourglass module. 
+`self._merge_mod()`: We apply a `1 × 1` Conv-BN module to both the input and output of the first hourglass module. We then merge them by element-wise addition followed by a ReLU and a residual block with 256 channels, which is then used as the input to the second hourglass module. 
 
 ```python
 class saccade(nn.Module):
