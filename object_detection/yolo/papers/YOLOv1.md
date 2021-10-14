@@ -1,6 +1,6 @@
 # YOLO: You Only Look Once (2015)
 
-**Original paper:** [You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/abs/1506.02640)
+**Original Paper:** [You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/abs/1506.02640)
 
 ## Improvement against other detectors
 
