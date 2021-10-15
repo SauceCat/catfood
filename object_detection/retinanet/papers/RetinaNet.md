@@ -12,15 +12,15 @@
 
 It’s found that the extreme class imbalance encountered during the training of dense detectors overwhelms the cross-entropy loss, where easily classified negatives comprise the majority of the loss and dominate the gradient.
 
-![](images/weighted_cross_entropy.png)
+![](../images/weighted_cross_entropy.png)
 
 A weighting factor `α ∈ [0, 1]` can be introduced for different classes, however, it only balances the importance of **positive/negative** examples but not **easy/hard** examples. Therefore, it’s proposed to reshape the loss function such that easy examples are down-weight and thus the training can focus on hard negatives. **Focal Loss** is defined as shown below, where `γ ≥ 0` is a tunable focusing parameter.
 
-![](images/focal_loss.png)
+![](../images/focal_loss.png)
 
 In practice, an `α-balanced` variant of the focal loss is used as it yields slightly improved accuracy over the `non-α-balanced` form.
 
-![](images/focal_loss_compare.png)
+![](../images/focal_loss_compare.png)
 
 - (1) When an example is misclassified and `p_t` is small, the modulating factor is near 1 and the loss is unaffected. As `p_t` is closing to 1, the factor goes to 0 and the loss for well-classified examples is down-weighted.
 
@@ -39,7 +39,7 @@ Two-stage detectors are often trained with the standard cross-entropy loss and a
 
 ## RetinaNet
 
-![](images/retinanet.png)
+![](../images/retinanet.png)
 
 The one-stage RetinaNet network architecture uses a Feature Pyramid Network (FPN) backbone on top of a feedforward ResNet architecture.
 

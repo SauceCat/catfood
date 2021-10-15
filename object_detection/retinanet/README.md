@@ -2,7 +2,7 @@
 
 ## Papers
 
-- [RetinaNet](RetinaNet.md)
+- [RetinaNet](papers/RetinaNet.md)
 
 ## Codes
 
