@@ -1,5 +1,7 @@
 # Feature Pyramid
 
+![](../images/fpn.png)
+
 ```python
 # fpn_sizes: [layer2, layer3, layer4]
 # BasicBlock (ResNet-18/34): [128, 256, 512]
@@ -61,7 +63,13 @@ class PyramidFeatures(nn.Module):
         self.P7_2 = nn.Conv2d(
             feature_size, feature_size, kernel_size=3, stride=2, padding=1
         )
+```
 
+## forward
+
+![](../images/fpn_lateral_connection.png)
+
+```python
     def forward(self, inputs):
         C3, C4, C5 = inputs
         # B, C, H, W
