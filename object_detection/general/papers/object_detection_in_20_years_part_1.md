@@ -244,19 +244,19 @@ To detect objects using a mixture model we use the matching algorithm described 
 
 ![](../images/dpm_mixture_model_2.png)
 
-<img src="../images/dpm_mixture_model_3.png" style="zoom:80%;" />
+<img src="../images/dpm_mixture_model_3.png" width=600 />
 
 ## DPM training
 
-<img src="../images/dpm_training.png" style="zoom:80%;" />
+<img src="../images/dpm_training.png" width=600 />
 
-<img src="../images/dpm_training_2.png" style="zoom:80%;" />
+<img src="../images/dpm_training_2.png" width=600 />
 
-<img src="../images/dpm_training_3.png" style="zoom:80%;" />
+<img src="../images/dpm_training_3.png" width=600 />
 
-<img src="../images/dpm_training_4_new.png" style="zoom:80%;" />
+<img src="../images/dpm_training_4_new.png" width=600 />
 
-<img src="../images/dpm_training_5.png" style="zoom:80%;" />
+<img src="../images/dpm_training_5.png" width=600 />
 
 ## Latent SVM
 
