@@ -2,7 +2,7 @@
 
 **Original Paper:** [Object Detection in 20 Years: A Survey](https://arxiv.org/abs/1905.05055)
 
-![](/home/saucecat/Desktop/develop/catfood/object_detection/general/images/object_detection_milestones.png)
+![](../images/object_detection_milestones.png)
 
 # Milestones: CNN based One-stage Detectors
 
